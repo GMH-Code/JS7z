@@ -16,7 +16,7 @@
 #include <sys/utsname.h>
 #ifdef __APPLE__
 #include <sys/sysctl.h>
-#elif !defined(_AIX)
+#elif (!(defined(_AIX) || defined(__EMSCRIPTEN__)))
 
 #include <sys/auxv.h>
 

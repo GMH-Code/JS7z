@@ -6,7 +6,12 @@ IS_ARM64=
 CROSS_COMPILE=
 MY_ARCH=
 USE_ASM=
+ifdef EMSCRIPTEN
+CC=$(CROSS_COMPILE)emcc
+CXX=$(CROSS_COMPILE)em++
+else
 CC=$(CROSS_COMPILE)gcc
 CXX=$(CROSS_COMPILE)g++
+endif # EMSCRIPTEN
 
 # -march=armv8-a+crc+crypto

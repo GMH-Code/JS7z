@@ -329,6 +329,9 @@ static void ShowCopyrightAndHelp(CStdOutStream *so, bool needHelp)
   if (!so)
     return;
   *so << kCopyrightString;
+#ifdef __EMSCRIPTEN__
+  *so << " JS7z WASM build: https://github.com/GMH-Code/JS7z" << endl;
+#endif
   // *so << "# CPUs: " << (UInt64)NWindows::NSystem::GetNumberOfProcessors() << endl;
   ShowProgInfo(so);
   *so << endl;

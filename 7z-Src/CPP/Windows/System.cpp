@@ -212,6 +212,8 @@ bool GetRamSize(UInt64 &size)
   #elif defined(__FreeBSD_kernel__) && defined(__GLIBC__)
   // GNU/kFreeBSD Debian
   // fixme
+  #elif defined(__EMSCRIPTEN__)
+  // Emscripten
   #else
 
   struct sysinfo info;

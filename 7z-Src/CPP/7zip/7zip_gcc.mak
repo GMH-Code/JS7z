@@ -32,9 +32,20 @@ endif
 # -save-temps
 CFLAGS_BASE_LIST = -c
 # CFLAGS_BASE_LIST = -S
+ifdef EMSCRIPTEN
+CFLAGS_BASE = -Oz $(CFLAGS_BASE_LIST) $(CFLAGS_WARN_WALL) $(CFLAGS_WARN) \
+ -DNDEBUG -D_REENTRANT -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+# Optional: -flto
+
+ifndef ST_MODE
+CFLAGS_BASE += -pthread
+endif # !ST_MODE
+
+else
 CFLAGS_BASE = -O2 $(CFLAGS_BASE_LIST) $(CFLAGS_WARN_WALL) $(CFLAGS_WARN) \
  -DNDEBUG -D_REENTRANT -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
  -fPIC
+endif # EMSCRIPTEN
 
 FLAGS_FLTO = -ffunction-sections
 FLAGS_FLTO = -flto
@@ -142,8 +153,25 @@ DEL_OBJ_EXE = -$(RM) $(PROGPATH) $(PROGPATH_STATIC) $(OBJS)
 
 # LOCAL_LIBS=-lpthread
 # LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
-LIB2 = -lpthread -ldl
+ifdef EMSCRIPTEN
+LIB2 = -Oz -sINITIAL_MEMORY=1MB -sALLOW_MEMORY_GROWTH=1 -sSTACK_SIZE=100KB -sINVOKE_RUN=0 -sEXIT_RUNTIME=1 \
+	-sMODULARIZE -sEXPORT_NAME="JS7z"
+# Optional: -flto
 
+ifndef ST_MODE
+LIB2 += -pthread -sPROXY_TO_PTHREAD=1
+endif # !ST_MODE
+
+ifdef WASM_EXTRA_FS
+LIB2 += -lnodefs.js -lworkerfs.js -lproxyfs.js \
+	-sEXPORTED_RUNTIME_METHODS='["callMain", "FS", "NODEFS", "WORKERFS", "PROXYFS"]'
+else
+LIB2 += -sEXPORTED_RUNTIME_METHODS='["callMain", "FS"]'
+endif # WASM_EXTRA_FS
+
+else
+LIB2 = -lpthread -ldl
+endif # EMSCRIPTEN
 
 endif
 

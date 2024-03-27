@@ -18,6 +18,13 @@
 
 #include "ConsoleClose.h"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <pthread.h>
+static bool block_main = false;
+static pthread_mutex_t mutex_main = PTHREAD_MUTEX_INITIALIZER;
+#endif
+
 using namespace NWindows;
 
 extern
@@ -101,6 +108,22 @@ int Z7_CDECL main
   #endif
 )
 {
+#ifdef __EMSCRIPTEN__
+  // The developer might call main() multiple times.  This is dangerous for
+  // data integrity, and the results could be unpredictable under certain
+  // circumstances, so we should prevent it for safety.
+  pthread_mutex_lock(&mutex_main);
+
+  if (block_main) {
+    pthread_mutex_unlock(&mutex_main);
+    exit(1);
+  }
+
+  block_main = true;
+
+  pthread_mutex_unlock(&mutex_main);
+#endif
+
   g_ErrStream = &g_StdErr;
   g_StdStream = &g_StdOut;
 

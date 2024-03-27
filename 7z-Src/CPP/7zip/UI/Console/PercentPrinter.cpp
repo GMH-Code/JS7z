@@ -28,7 +28,9 @@ void CPercentPrinter::ClosePrint(bool needFlush)
   if (num != 0)
   {
 
+  #ifndef __EMSCRIPTEN__
   unsigned i;
+  #endif // !__EMSCRIPTEN__
     
   /* '\r' in old MAC OS means "new line".
      So we can't use '\r' in some systems */
@@ -39,6 +41,10 @@ void CPercentPrinter::ClosePrint(bool needFlush)
     *p++ = '\r';
     for (i = 0; i < num; i++) *p++ = ' ';
     *p++ = '\r';
+  #elif defined(__EMSCRIPTEN__)
+    char *start = _temp.GetBuf(1);
+    char *p = start;
+    *p++ = '\n';
   #else
     char *start = _temp.GetBuf(num * 3);
     char *p = start;

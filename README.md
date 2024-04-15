@@ -44,6 +44,7 @@ Some differences with JS7z include:
 - Safe; forces proper memory resets after each use
 - The runtime and threads/workers automatically quit upon completion
 - Asynchronous completion callbacks with exit statuses/reasons
+- Improved exception handling coverage (optional; increases build size)
 - Supports `PROXYFS` as well as `NODEFS` and `WORKERFS`, so you can chain operations between instances without needing to offload data
 - Minimal build variants
 
@@ -219,7 +220,7 @@ In most cases, you will want to use a multi-threaded version, but you can fall b
 - Multi-thread mode works in nearly all modern browsers.  It is extremely fast, runs in the background, and returns immediately.
 - Single-thread mode supports less common browsers, but is slower with certain tasks.  It also can require a bit more work to use.
 
-Warning: Calling `callMain()` in single-thread mode *currently* returns after the command is run, so long processes can hang the browser unless you run them in a Worker.  You should still use `onExit(exitCode)` to detect a proper exit.  The single-threaded version may also run in the same asynchronous way one day.
+Warning: Calling `callMain()` in single-thread mode *currently* returns after the command completes, so long processes can hang the browser unless you run them in a Worker.  You should still use `onExit(exitCode)` to detect a proper exit.  The single-threaded version may also run in the same asynchronous way one day.
 
 You can detect multi-threaded shared memory support in the browser like this:
 
@@ -260,6 +261,7 @@ You can insert extra parameters between `emmake make` and the rest of the comman
 
 - To build in single-thread mode, insert `ST_MODE=1`.
 - To add support for mounting additional WebAssembly file systems (`NODEFS`, `WORKERFS` & `PROXYFS`), insert `WASM_EXTRA_FS=1`.
+- For extra exception catching during 7-Zip runs, insert `WASM_EXCEPTION_CATCHING=1`.
 
 Usage of these compilation flags will be displayed in 7-Zip's output.
 

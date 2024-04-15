@@ -2,6 +2,7 @@ ifdef EMSCRIPTEN
 PROG = js7z.js
 # ST_MODE = 1
 # WASM_EXTRA_FS = 1
+# WASM_EXCEPTION_CATCHING = 1
 else
 PROG = 7zz
 endif

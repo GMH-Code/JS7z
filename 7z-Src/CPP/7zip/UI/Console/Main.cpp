@@ -339,6 +339,9 @@ static void ShowCopyrightAndHelp(CStdOutStream *so, bool needHelp)
 #ifdef WASM_EXTRA_FS
   *so << "+FS";
 #endif // WASM_EXTRA_FS
+#ifdef WASM_EXCEPTION_CATCHING
+  *so << "+EC";
+#endif // WASM_EXCEPTION_CATCHING
   *so << "] build: https://github.com/GMH-Code/JS7z" << endl;
 #endif // __EMSCRIPTEN__
   // *so << "# CPUs: " << (UInt64)NWindows::NSystem::GetNumberOfProcessors() << endl;

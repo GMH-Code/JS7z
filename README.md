@@ -46,6 +46,7 @@ Some differences with JS7z include:
 - Asynchronous completion callbacks with exit statuses/reasons
 - Improved exception handling coverage (optional; increases build size)
 - Supports `PROXYFS` as well as `NODEFS` and `WORKERFS`, so you can chain operations between instances without needing to offload data
+- Can work with JavaScript or on behalf of other WebAssembly projects
 - Minimal build variants
 
 Sample Web Page: Compress User-Supplied Files
@@ -102,7 +103,7 @@ async function compressFile() {
   // Define a function to be called when the compression is complete
   js7z.onExit = function(exitCode) {
     // Compression unsuccessful
-    if (exitCode != 0)
+    if (exitCode !== 0)
       return;
 
     // Compression successful
@@ -152,7 +153,7 @@ Completion Callbacks, Error Handling & Console Output
 
 Ideally, all of these should be handled:
 
-- 7-Zip writes textual information and errors to `stdout` and `stderr` respectively, which are mapped to `print(text)` and `printErr(text)`.
+- 7-Zip writes textual information and errors to `stdout` and `stderr` respectively, which call `print(text)` and `printErr(text)` every time a line of text is flushed from the buffer.
 - If the Emscripten runtime terminates unexpectedly, `onAbort(reason)` should be called with an explanation.
 - When errors happen inside 7-Zip, usually `onExit(errorCode)` will be called with an error code other than `0`.
 - If the Emscripten runtime has trouble starting up, for example if the `.wasm` file cannot be downloaded or the browser does not support certain features, there is a chance that the call to `JS7z()` may throw an error.
@@ -269,4 +270,4 @@ The build will output `js7z.js`, `js7z.wasm` and, if multi-threaded mode is chos
 
 ---
 
-Documentation (C) Copyright 2024 Gregory Maynard-Hoare.  See the `7z-Src/DOC` folder for licence information.
+This documentation Copyright (C) 2024 Gregory Maynard-Hoare.  See the `7z-Src/DOC` folder for licence information.

@@ -10,14 +10,14 @@ This is a JavaScript port of the famous archiver *7-Zip*, which you can use in y
 
 When sent from an efficiently configured web server, JS7z uses approximately 550KB when compressed in GZip format, or about 450KB in Brotli.
 
-The supplied version of 7-Zip is currently **24.07**.  It is ported with help from Emscripten.
+The supplied version of 7-Zip is currently **24.08**.  It is ported with help from Emscripten.
 
 Downloading Pre-Built Distributions
 -----------------------------------
 
 The latest pre-built versions can be downloaded here: https://github.com/GMH-Code/JS7z/releases
 
-There are four variants available:
+There are four main variants available:
 
 - Multi-threaded: `[MT]`
 - Multi-threaded with extended file system functionality: `[MT+FS]`
@@ -266,7 +266,9 @@ You can insert extra parameters between `emmake make` and the rest of the comman
 
 Usage of these compilation flags will be displayed in 7-Zip's output.
 
-The build will output `js7z.js`, `js7z.wasm` and, if multi-threaded mode is chosen, `js7z.worker.js` into the `Alone2` folder.
+Selecting extra exception catching will add `+EC` to the flags.  This feature allows you to see further details of failures, such as extraction security issues, corrupt archive data, and incorrect passwords.  Using this increases the build size, so it is switched off by default.
+
+At the final stage of the build, `js7z.js` and `js7z.wasm` will be written into the `Alone2/b/g` folder.  If multi-threaded mode is chosen, `js7z.worker.js` *may* be added.  On recent versions of Emscripten, this file is an unused compatibility stub and can be deleted.
 
 ---
 

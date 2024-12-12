@@ -22,24 +22,30 @@ CFLAGS_WARN_GCC_4_8_ADD := \
 CFLAGS_WARN_GCC_4_8 := $(filter-out $(CFLAGS_WARN_GCC_4_8_REMOVE),$(CFLAGS_WARN_GCC_4_8)) $(CFLAGS_WARN_GCC_4_8_ADD)
 endif # EMSCRIPTEN
 
-CFLAGS_WARN_GCC_6 = $(CFLAGS_WARN_GCC_4_8)\
+CFLAGS_WARN_GCC_5 = $(CFLAGS_WARN_GCC_4_8)\
   -Wbool-compare \
-  -Wduplicated-cond \
 
-#  -Wno-strict-aliasing
+ifdef EMSCRIPTEN
+CFLAGS_WARN_GCC_5_REMOVE := \
+  -Wbool-compare
+
+CFLAGS_WARN_GCC_5 := $(filter-out $(CFLAGS_WARN_GCC_5_REMOVE),$(CFLAGS_WARN_GCC_5))
+endif # EMSCRIPTEN
+
+CFLAGS_WARN_GCC_6 = $(CFLAGS_WARN_GCC_5)\
+  -Wduplicated-cond \
 
 ifdef EMSCRIPTEN
 CFLAGS_WARN_GCC_6_REMOVE := \
-  -Wbool-compare \
   -Wduplicated-cond
 
 CFLAGS_WARN_GCC_6 := $(filter-out $(CFLAGS_WARN_GCC_6_REMOVE),$(CFLAGS_WARN_GCC_6))
 endif # EMSCRIPTEN
 
-CFLAGS_WARN_GCC_9 = $(CFLAGS_WARN_GCC_6)\
-  -Waddress-of-packed-member \
+#  -Wno-strict-aliasing
+
+CFLAGS_WARN_GCC_7 = $(CFLAGS_WARN_GCC_6)\
   -Wbool-operation \
-  -Wcast-align=strict \
   -Wconversion \
   -Wdangling-else \
   -Wduplicated-branches \
@@ -47,22 +53,34 @@ CFLAGS_WARN_GCC_9 = $(CFLAGS_WARN_GCC_6)\
   -Wint-in-bool-context \
   -Wmaybe-uninitialized \
   -Wmisleading-indentation \
-  -Wmissing-attributes
 
 ifdef EMSCRIPTEN
-CFLAGS_WARN_GCC_9_REMOVE := \
-  -Wcast-align=strict \
+CFLAGS_WARN_GCC_7_REMOVE := \
   -Wduplicated-branches \
   -Wimplicit-fallthrough=5 \
-  -Wmaybe-uninitialized \
-  -Wmissing-attributes
+  -Wmaybe-uninitialized
 
-CFLAGS_WARN_GCC_9_ADD := \
+CFLAGS_WARN_GCC_7_ADD := \
   -Wimplicit-fallthrough \
   -Wuninitialized
 
-CFLAGS_WARN_GCC_9 := $(filter-out $(CFLAGS_WARN_GCC_9_REMOVE),$(CFLAGS_WARN_GCC_9)) $(CFLAGS_WARN_GCC_9_ADD)
+CFLAGS_WARN_GCC_7 := $(filter-out $(CFLAGS_WARN_GCC_7_REMOVE),$(CFLAGS_WARN_GCC_7)) $(CFLAGS_WARN_GCC_7_ADD)
 endif # EMSCRIPTEN
+
+CFLAGS_WARN_GCC_8 = $(CFLAGS_WARN_GCC_7)\
+  -Wcast-align=strict \
+  -Wmissing-attributes
+
+ifdef EMSCRIPTEN
+CFLAGS_WARN_GCC_8_REMOVE := \
+  -Wcast-align=strict \
+  -Wmissing-attributes
+
+CFLAGS_WARN_GCC_8 := $(filter-out $(CFLAGS_WARN_GCC_8_REMOVE),$(CFLAGS_WARN_GCC_8))
+endif # EMSCRIPTEN
+
+CFLAGS_WARN_GCC_9 = $(CFLAGS_WARN_GCC_8)\
+  -Waddress-of-packed-member \
 
 # In C: -Wsign-conversion enabled also by -Wconversion
 #  -Wno-sign-conversion \
@@ -73,7 +91,10 @@ CFLAGS_WARN_GCC_PPMD_UNALIGNED = \
 
 
 CFLAGS_WARN = $(CFLAGS_WARN_GCC_4_8)
+CFLAGS_WARN = $(CFLAGS_WARN_GCC_5)
 CFLAGS_WARN = $(CFLAGS_WARN_GCC_6)
+CFLAGS_WARN = $(CFLAGS_WARN_GCC_7)
+CFLAGS_WARN = $(CFLAGS_WARN_GCC_8)
 CFLAGS_WARN = $(CFLAGS_WARN_GCC_9)
 
 # CXX_STD_FLAGS = -std=c++11

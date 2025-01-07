@@ -42,6 +42,7 @@ Some differences with JS7z include:
 - Runs almost entirely in separate worker threads
 - Can use all available CPU cores for compression/decompression
 - Safe; forces proper memory resets after each use
+- Handles archives over 2GiB in size
 - The runtime and threads/workers automatically quit upon completion
 - Asynchronous completion callbacks with exit statuses/reasons
 - Improved exception handling coverage (optional; increases build size)
@@ -131,7 +132,7 @@ Other notes:
 
 - This page will only work when hosted on a proper local or remote web server.
 - The web server should be configured with 'Cross-Origin Isolation' (preferred), **or** the browser can be started with `SharedArrayBuffer` enabled, **or** you can add a loader to display the page with the correct headers configured (surprisingly, this is possible).
-- The `callMain([])` array strings are the same as the individual 7-Zip command-line arguments.
+- The `callMain([])` array strings are identical to the command-line version of 7-Zip on desktop systems, with the exception of how they are formatted.
 
 Using JS7z in Node.js
 ---------------------
@@ -206,12 +207,14 @@ console.info(Object.keys(js7z.FS));
 
 You can use `js7z.NODEFS`, `js7z.WORKERFS` and `js7z.PROXYFS` as the first parameter of `js7z.FS.mount()` to mount more file system types, providing you are using a build with those features enabled.
 
+Note that it is possible to work on files over 2GiB in size -- this limit only affects the processing part of 7-Zip, which is mostly used by internal compression/decompression dictionaries.  It does not affect in-memory filesystem objects, which are allocated outside of the WebAssembly 'heap'.
+
 Bypassing the File System
 -------------------------
 
-Like in Unix/Linux systems, you *can* manually pipe data to and from `stdin` and `stdout`, thereby bypassing the file system and Emscripten's 2GB in-memory storage limit.  This does not work in all situations because compressing some file formats requires random access to files (e.g. to update tables of contents), so doing this is not usually recommended or necessary.
+Like in Unix/Linux systems, you *can* manually pipe data to and from `stdin` and `stdout`, so you can avoid loading certain filetypes all at once.  This does not work in every situation, and is not usually recommended, because compressing/decompressing many file formats requires random access to files (e.g. to query or update tables of contents).
 
-With `NODEFS` backend mounts, the storage limit should not be a problem.
+With `NODEFS` backend mounts, files can be randomly accessed directly on storage.
 
 Multi-Threaded vs. Single-Threaded Builds
 -----------------------------------------
@@ -268,7 +271,7 @@ Usage of these compilation flags will be displayed in 7-Zip's output.
 
 Selecting extra exception catching will add `+EC` to the flags.  This feature allows you to see further details of failures, such as extraction security issues, corrupt archive data, and incorrect passwords.  Using this increases the build size, so it is switched off by default.
 
-At the final stage of the build, `js7z.js` and `js7z.wasm` will be written into the `Alone2/b/g` folder.  If multi-threaded mode is chosen, `js7z.worker.js` *may* be added.  On recent versions of Emscripten, this file is an unused compatibility stub and can be deleted.
+At the final stage of the build, `js7z.js` and `js7z.wasm` will be written into the `Alone2/b/g` folder.
 
 ---
 

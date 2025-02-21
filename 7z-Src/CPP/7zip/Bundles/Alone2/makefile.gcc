@@ -1,5 +1,11 @@
 ifdef EMSCRIPTEN
+
+ifdef EXPORT_ES6
+PROG = js7z.mjs
+else
 PROG = js7z.js
+endif
+
 # ST_MODE = 1
 # WASM_EXTRA_FS = 1
 # WASM_EXCEPTION_CATCHING = 1

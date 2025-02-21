@@ -17,14 +17,13 @@ Downloading Pre-Built Distributions
 
 The latest pre-built versions can be downloaded here: https://github.com/GMH-Code/JS7z/releases
 
-There are four main variants available:
+There are several variants available with a range of features.  The fastest, most stable, and recommended version is `[MT+FS+EC]`.  The initialisms mean this:
 
-- Multi-threaded: `[MT]`
-- Multi-threaded with extended file system functionality: `[MT+FS]`
-- Single-threaded: `[ST]`
-- Single-threaded with extended file system functionality: `[ST+FS]`
+- `MT` or `ST`: Multi-threaded or single-threaded
+- `FS`: Extended file system functionality
+- `EC`: Extra internal exception catching (essential for some scenarios)!
 
-The recommended version (if you are not sure which one you need yet), is `[MT+FS]`.
+The recommended version is also available as an [NPM package](https://www.npmjs.com/package/js7z-tools) for *Node.js* users.
 
 Usage
 -----
@@ -221,8 +220,8 @@ Multi-Threaded vs. Single-Threaded Builds
 
 In most cases, you will want to use a multi-threaded version, but you can fall back to a single-threaded version if you like.
 
-- Multi-thread mode works in nearly all modern browsers.  It is extremely fast, runs in the background, and returns immediately.
-- Single-thread mode supports less common browsers, but is slower with certain tasks.  It also can require a bit more work to use.
+- Multi-thread mode works in nearly all modern browsers and *Node.js*.  It is extremely fast, runs in the background, and returns immediately.
+- Single-thread mode supports less common browsers, but is slower with certain tasks.  It can also require a bit more work to use.
 
 Warning: Calling `callMain()` in single-thread mode *currently* returns after the command completes, so long processes can hang the browser unless you run them in a Worker.  You should still use `onExit(exitCode)` to detect a proper exit.  The single-threaded version may also run in the same asynchronous way one day.
 
@@ -269,10 +268,15 @@ You can insert extra parameters between `emmake make` and the rest of the comman
 
 Usage of these compilation flags will be displayed in 7-Zip's output.
 
-Selecting extra exception catching will add `+EC` to the flags.  This feature allows you to see further details of failures, such as extraction security issues, corrupt archive data, and incorrect passwords.  Using this increases the build size, so it is switched off by default.
+Selecting extra exception catching increases the build size, but it allows you to see further details of failures, such as extraction security issues, corrupt archive data, and incorrect passwords.
 
 At the final stage of the build, `js7z.js` and `js7z.wasm` will be written into the `Alone2/b/g` folder.
 
+There are some other parameters available that slightly alter the exported build, but they do not affect the WebAssembly side:
+
+- To export a JavaScript ES6 module, add `EXPORT_ES6=1`.  This will also change the name of `js7z.js` to `js7z.mjs`.
+- To generate a TypeScript definitions file, add `EMIT_TSD=1`.  This will create `js7z.d.ts`.
+
 ---
 
-This documentation Copyright (C) 2024 Gregory Maynard-Hoare.  See the `7z-Src/DOC` folder for licence information.
+This documentation Copyright (C) 2025 Gregory Maynard-Hoare.  See the `7z-Src/DOC` folder for licence information.

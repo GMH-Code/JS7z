@@ -200,6 +200,14 @@ ifdef WASM_EXCEPTION_CATCHING
 LIB2 += -sDISABLE_EXCEPTION_CATCHING=0
 endif # WASM_EXCEPTION_CATCHING
 
+ifdef EXPORT_ES6
+LIB2 += -sEXPORT_ES6=1
+endif # EXPORT_ES6
+
+ifdef EMIT_TSD
+LIB2 += --emit-tsd js7z.d.ts
+endif # EMIT_TSD
+
 else
 LIB2 = -lpthread -ldl
 endif # EMSCRIPTEN

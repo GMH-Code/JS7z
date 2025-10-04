@@ -10,7 +10,7 @@ This is a JavaScript port of the famous archiver *7-Zip*, which you can use in y
 
 When sent from an efficiently configured web server, JS7z uses approximately 550KB when compressed in GZip format, or about 450KB in Brotli.
 
-The supplied version of 7-Zip is currently **24.09**.  It is ported with help from Emscripten.
+The supplied version of 7-Zip is currently **25.01**.  It is ported with help from Emscripten.
 
 Downloading Pre-Built Distributions
 -----------------------------------
